@@ -39,6 +39,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@octokit/rest": "^21.0.2"
+		"@octokit/rest": "^21.0.2",
+		"install": "^0.13.0",
+		"lucide-svelte": "^0.441.0"
 	}
 }

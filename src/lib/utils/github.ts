@@ -25,3 +25,35 @@ export async function getReleaseNotes(
 		return 'Failed to fetch release notes.';
 	}
 }
+
+export async function getRepositoryDetails(
+	owner: string,
+	repo: string
+): Promise<{
+	avatarUrl: string;
+	stars: number;
+	forks: number;
+	recentCommits: number;
+}> {
+	try {
+		const [repoData, commitData] = await Promise.all([
+			octokit.repos.get({ owner, repo }),
+			octokit.repos.listCommits({ owner, repo, per_page: 30 }) // Fetch last 30 commits
+		]);
+
+		return {
+			avatarUrl: repoData.data.owner.avatar_url,
+			stars: repoData.data.stargazers_count,
+			forks: repoData.data.forks_count,
+			recentCommits: commitData.data.length
+		};
+	} catch (error) {
+		console.error('Error fetching repository details:', error);
+		return {
+			avatarUrl: '',
+			stars: 0,
+			forks: 0,
+			recentCommits: 0
+		};
+	}
+}

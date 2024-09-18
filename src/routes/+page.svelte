@@ -1,15 +1,16 @@
 <script lang="ts">
-	import RepositoryList from '$lib/components/repository-list.svelte';
-	import AddRepositoryModal from '$lib/components/add-repository-modal.svelte';
-	import AddRepositoryUrl from '$lib/components/add-repository-url.svelte';
 	import { onMount } from 'svelte';
 	import {
 		repositories,
 		addRepository,
 		removeRepository,
-		updateLatestRelease
+		updateLatestRelease,
+		updateRepositoryDetails
 	} from '$lib/stores/repositories';
 	import { getLatestRelease } from '$lib/utils/github';
+	import AddRepositoryModal from '$lib/components/add-repository-modal.svelte';
+	import AddRepositoryUrl from '$lib/components/add-repository-url.svelte';
+	import RepositoryList from '$lib/components/repository-list.svelte';
 
 	let showAddModal = false;
 	let showUrlModal = false;
@@ -19,11 +20,12 @@
 		$repositories.forEach(async (repo) => {
 			const latestRelease = await getLatestRelease(repo.owner, repo.repo);
 			updateLatestRelease(repo.owner, repo.repo, latestRelease);
+			updateRepositoryDetails(repo.owner, repo.repo);
 		});
 	});
 
-	function handleAddRepository(event: CustomEvent<{ owner: string; repo: string }>) {
-		addRepository(event.detail.owner, event.detail.repo);
+	async function handleAddRepository(event: CustomEvent<{ owner: string; repo: string }>) {
+		await addRepository(event.detail.owner, event.detail.repo);
 		showAddModal = false;
 	}
 
@@ -36,8 +38,8 @@
 		showUrlModal = true;
 	}
 
-	function handleUrlConfirm(event: CustomEvent<{ owner: string; repo: string }>) {
-		addRepository(event.detail.owner, event.detail.repo);
+	async function handleUrlConfirm(event: CustomEvent<{ owner: string; repo: string }>) {
+		await addRepository(event.detail.owner, event.detail.repo);
 		showUrlModal = false;
 		urlToAdd = '';
 	}
