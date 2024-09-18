@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { getRepositoryDetails } from '$lib/utils/github';
+import { getRepositoryDetails, getLatestRelease } from '$lib/utils/github';
 
 export interface Repository {
 	owner: string;
@@ -26,13 +26,17 @@ repositories.subscribe((value) => {
 });
 
 export async function addRepository(owner: string, repo: string): Promise<void> {
-	const details = await getRepositoryDetails(owner, repo);
+	const [details, latestRelease] = await Promise.all([
+		getRepositoryDetails(owner, repo),
+		getLatestRelease(owner, repo)
+	]);
+
 	repositories.update((repos) => [
 		...repos,
 		{
 			owner,
 			repo,
-			latestRelease: '',
+			latestRelease,
 			...details
 		}
 	]);
@@ -42,15 +46,15 @@ export function removeRepository(owner: string, repo: string): void {
 	repositories.update((repos) => repos.filter((r) => !(r.owner === owner && r.repo === repo)));
 }
 
-export function updateLatestRelease(owner: string, repo: string, latestRelease: string): void {
-	repositories.update((repos) =>
-		repos.map((r) => (r.owner === owner && r.repo === repo ? { ...r, latestRelease } : r))
-	);
-}
-
 export async function updateRepositoryDetails(owner: string, repo: string): Promise<void> {
-	const details = await getRepositoryDetails(owner, repo);
+	const [details, latestRelease] = await Promise.all([
+		getRepositoryDetails(owner, repo),
+		getLatestRelease(owner, repo)
+	]);
+
 	repositories.update((repos) =>
-		repos.map((r) => (r.owner === owner && r.repo === repo ? { ...r, ...details } : r))
+		repos.map((r) =>
+			r.owner === owner && r.repo === repo ? { ...r, ...details, latestRelease } : r
+		)
 	);
 }

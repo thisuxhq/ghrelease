@@ -1,8 +1,13 @@
 import { Octokit } from '@octokit/rest';
 
-const octokit = new Octokit();
+let octokit: Octokit;
+
+export function initializeGitHubClient(token: string) {
+	octokit = new Octokit({ auth: token });
+}
 
 export async function getLatestRelease(owner: string, repo: string): Promise<string> {
+	if (!octokit) throw new Error('GitHub client not initialized');
 	try {
 		const { data } = await octokit.repos.getLatestRelease({ owner, repo });
 		return data.tag_name;
@@ -17,6 +22,7 @@ export async function getReleaseNotes(
 	repo: string,
 	releaseTag: string
 ): Promise<string> {
+	if (!octokit) throw new Error('GitHub client not initialized');
 	try {
 		const { data } = await octokit.repos.getReleaseByTag({ owner, repo, tag: releaseTag });
 		return data.body || 'No release notes available.';
@@ -35,10 +41,11 @@ export async function getRepositoryDetails(
 	forks: number;
 	recentCommits: number;
 }> {
+	if (!octokit) throw new Error('GitHub client not initialized');
 	try {
 		const [repoData, commitData] = await Promise.all([
 			octokit.repos.get({ owner, repo }),
-			octokit.repos.listCommits({ owner, repo, per_page: 30 }) // Fetch last 30 commits
+			octokit.repos.listCommits({ owner, repo, per_page: 30 })
 		]);
 
 		return {
