@@ -21,14 +21,22 @@ export async function getReleaseNotes(
 	owner: string,
 	repo: string,
 	releaseTag: string
-): Promise<string> {
+): Promise<{ notes: string; date: string }> {
 	if (!octokit) throw new Error('GitHub client not initialized');
 	try {
 		const { data } = await octokit.repos.getReleaseByTag({ owner, repo, tag: releaseTag });
-		return data.body || 'No release notes available.';
+		return {
+			notes: data.body || 'No release notes available.',
+			owner: owner,
+			repo: repo,
+			date: data.published_at
+		};
 	} catch (error) {
 		console.error('Error fetching release notes:', error);
-		return 'Failed to fetch release notes.';
+		return {
+			notes: 'Failed to fetch release notes.',
+			date: ''
+		};
 	}
 }
 
