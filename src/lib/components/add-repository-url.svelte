@@ -1,33 +1,35 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
+	import { Plus } from 'lucide-svelte';
+	import { Input } from '$lib/components/ui/input/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
 
-  const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher();
 
-  let url = '';
+	let url = '';
 
-  function handleSubmit() {
-    dispatch('submit', { url });
-    url = '';
-  }
+	function handleSubmit() {
+		dispatch('submit', { url });
+		url = '';
+	}
 
-  function isValidGitHubUrl(url: string): boolean {
-    const githubUrlRegex = /^https?:\/\/github\.com\/[\w.-]+\/[\w.-]+\/?$/;
-    return githubUrlRegex.test(url);
-  }
+	function isValidGitHubUrl(url: string): boolean {
+		const githubUrlRegex = /^https?:\/\/github\.com\/[\w.-]+\/[\w.-]+\/?$/;
+		return githubUrlRegex.test(url);
+	}
 </script>
 
-<form on:submit|preventDefault={handleSubmit} class="flex items-center">
-  <input
-    type="text"
-    bind:value={url}
-    placeholder="Paste GitHub repository URL"
-    class="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-  />
-  <button
-    type="submit"
-    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r-md"
-    disabled={!isValidGitHubUrl(url)}
-  >
-    Add
-  </button>
+<form on:submit|preventDefault={handleSubmit} class="mb-6 mt-4">
+	<div class="flex items-center rounded-full bg-white p-4">
+		<Input
+			type="text"
+			bind:value={url}
+			placeholder="Paste GitHub repository URL"
+			class="w-full flex-grow border-none bg-transparent p-2 shadow-none focus:outline-none focus-visible:ring-transparent"
+		/>
+		<Button type="submit" variant="default" class="rounded-full" disabled={!isValidGitHubUrl(url)}>
+			<Plus class="mr-2 h-5 w-5" />
+			Add
+		</Button>
+	</div>
 </form>
