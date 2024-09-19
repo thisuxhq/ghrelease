@@ -10,6 +10,7 @@
 	import AddRepositoryModal from '$lib/components/add-repository-modal.svelte';
 	import AddRepositoryUrl from '$lib/components/add-repository-url.svelte';
 	import RepositoryList from '$lib/components/repository-list.svelte';
+	import { fade, scale } from 'svelte/transition';
 
 	let showAddModal = false;
 	let showUrlModal = false;
@@ -67,81 +68,86 @@
 		urlToAdd = '';
 		isLoading = false;
 	}
+
+	let loadingMessage = 'Loading repositories...';
 </script>
 
-<main class="container mx-auto p-4">
-	<h1 class="mb-4 text-3xl font-bold">GitHub Release Tracker</h1>
+<main class="container mx-auto p-6  min-h-screen w-full">
+	<h1 class="mb-6 text-5xl font-medium text-center text-gray-900 tracking-tight">GitHub release tracker</h1>
 
 	{#if !isTokenSet}
-		<div class="mb-4">
-			<h2 class="mb-2 text-xl font-semibold">Set GitHub Token</h2>
+		<div class="mb-6 p-6 border rounded-lg shadow-lg bg-white">
+			<h2 class="mb-4 text-3xl font-semibold">Set Your GitHub Token</h2>
 			<input
 				type="password"
 				bind:value={githubToken}
 				placeholder="Enter your GitHub Personal Access Token"
-				class="mr-2 rounded border p-2"
+				class="mr-2 rounded border p-3 w-full border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
 			/>
 			<button
 				on:click={handleSetToken}
-				class="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+				class="mt-4 w-full rounded bg-blue-600 px-4 py-3 font-bold text-white hover:bg-blue-700 transition duration-300"
 			>
-				Set Token
+				Submit Token
 			</button>
-			<p class="mt-2 text-sm">
-				To track public repo releases, you'll need a fine-grained personal access token.
-				<br />
-				1. Go to
-				<a
-					href="https://github.com/settings/tokens"
-					target="_blank"
-					class="text-blue-500 hover:underline">GitHub Tokens</a
-				>.
-				<br />
-				2. Click "Generate new token" and select "Fine-grained" tokens.
-				<br />
-				3. In the repository access section, select the public repos you want to track.
-				<br />
-				4. Grant "read" permissions under "Contents" to access releases.
-				<br />
-				<a
-					href="https://docs.github.com/en/rest/releases/releases"
-					target="_blank"
-					class="text-blue-500 hover:underline"
-				>
-					Learn more about GitHub release tokens
-				</a>.
+			<p class="mt-3 text-sm text-gray-600">
+				To track public repo releases, you'll need a fine-grained personal access token. 
+				<a href="https://github.com/settings/tokens" target="_blank" class="text-blue-500 hover:underline">Learn more</a>.
 			</p>
 		</div>
 	{:else}
-		<div class="mb-4">
+		<div class="mb-6">
 			<AddRepositoryUrl on:submit={handleUrlSubmit} />
 		</div>
 
 		<button
-			class="mb-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+			class="mb-6 rounded bg-blue-600 px-4 py-3 font-bold text-white hover:bg-blue-700 transition duration-300"
 			on:click={() => (showAddModal = true)}
 		>
 			Add Repository Manually
 		</button>
 
 		{#if isLoading}
-			<div class="py-4 text-center">
-				<p>Loading...</p>
+			<div class="py-4 text-center" transition:fade>
+				<p class="text-lg">{loadingMessage}</p>
+				<div class="loader"></div>
 			</div>
 		{:else}
 			<RepositoryList repositories={$repositories} on:remove={handleRemoveRepository} />
 		{/if}
 
 		{#if showAddModal}
-			<AddRepositoryModal on:add={handleAddRepository} on:close={() => (showAddModal = false)} />
+			<div transition:scale>
+				<AddRepositoryModal on:add={handleAddRepository} on:close={() => (showAddModal = false)} />
+			</div>
 		{/if}
 
 		{#if showUrlModal}
-			<AddRepositoryModal
-				on:add={handleUrlConfirm}
-				on:close={() => (showUrlModal = false)}
-				{urlToAdd}
-			/>
+			<div transition:scale>
+				<AddRepositoryModal
+					on:add={handleUrlConfirm}
+					on:close={() => (showUrlModal = false)}
+					{urlToAdd}
+				/>
+			</div>
 		{/if}
 	{/if}
 </main>
+
+<style>
+	
+	.loader {
+		border: 8px solid #e2e8f0; /* Light gray */
+		border-top: 8px solid #3182ce; /* Blue */
+		border-radius: 50%;
+		width: 50px;
+		height: 50px;
+		animation: spin 1s linear infinite;
+		margin: 0 auto;
+	}
+
+	@keyframes spin {
+		0% { transform: rotate(0deg); }
+		100% { transform: rotate(360deg); }
+	}
+</style>

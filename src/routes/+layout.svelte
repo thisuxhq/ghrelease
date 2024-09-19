@@ -2,4 +2,6 @@
 	import '../app.css';
 </script>
 
-<slot></slot>
+<div class="mx-auto h-screen w-full items-center justify-center antialiased bg-gray-100">
+	<slot />
+</div>
