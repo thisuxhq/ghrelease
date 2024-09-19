@@ -12,8 +12,9 @@
 	import RepositoryList from '$lib/components/repository-list.svelte';
 	import { fade, scale } from 'svelte/transition';
 	import { Skeleton } from '$lib/components/ui/skeleton';
-	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { Input } from '$lib/components/ui/input/index.js';
+	import WhoAreWe from '$lib/components/who-are-we.svelte';
 
 	let showAddModal = false;
 	let showUrlModal = false;
@@ -83,7 +84,7 @@
 		name="keywords"
 		content="GitHub, release tracker, AI, repository monitoring, latest releases, personal access token"
 	/>
-	<meta name="author" content="ThisUX – Desing led product studio" />
+	<meta name="author" content="By Sanju, from ThisUX – Desing led product studio" />
 	<meta property="og:title" content="GitHub Release Tracker - AI-Powered Monitoring" />
 	<meta
 		property="og:description"
@@ -103,7 +104,7 @@
 	<meta name="twitter:image" content="https://ghreleases.thisux.com/image.png" />
 </svelte:head>
 
-<main class="container mx-auto min-h-screen w-full max-w-2xl p-6">
+<main class="container relative mx-auto min-h-screen w-full max-w-2xl p-6">
 	<h1
 		class="mb-6 text-start text-6xl font-medium tracking-tight"
 		style="background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(to right, black, gray);"
@@ -123,24 +124,28 @@
 			<Button on:click={handleSetToken} class="w-full rounded-full" variant="default"
 				>Submit Token</Button
 			>
-			<p class="mt-3 text-sm text-gray-600">
+			<p class="mt-3 text-base text-gray-700">
 				To track public repo releases, follow these steps to get a fine-grained personal access
 				token:
-			</p>
-			<ol class="list-disc pl-5">
-				<li>
-					Go to <a
+				<span class="text-gray-700"
+					>Go to <a
 						href="https://github.com/settings/tokens"
 						target="_blank"
 						class="text-blue-500 hover:underline">GitHub Settings</a
-					>.
+					>.</span
+				>
+			</p>
+			<ol class="list-disc pl-5">
+				<li class="text-base text-gray-700">Click on "Developer settings" in the left sidebar.</li>
+				<li class="text-base text-gray-700">
+					Select "Personal access tokens" and then "Generate new token".
 				</li>
-				<li>Click on "Developer settings" in the left sidebar.</li>
-				<li>Select "Personal access tokens" and then "Generate new token".</li>
-				<li>Choose "repo" under "Select scopes" to allow access to public repositories.</li>
-				<li>Click "Generate token" and copy the token.</li>
+				<li class="text-base text-gray-700">
+					Choose "repo" under "Select scopes" to allow access to public repositories.
+				</li>
+				<li class="text-base text-gray-700">Click "Generate token" and copy the token.</li>
 			</ol>
-			<p class="mt-3 text-sm text-gray-600">
+			<p class="mt-3 text-base text-gray-700">
 				Note: Your tokens are saved on your browser only and are not stored on our servers.
 			</p>
 		</div>
@@ -176,5 +181,7 @@
 				/>
 			</div>
 		{/if}
+
+		<WhoAreWe />
 	{/if}
 </main>
