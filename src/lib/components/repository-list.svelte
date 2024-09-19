@@ -22,7 +22,7 @@
 		<p>No repositories added yet.</p>
 	{:else}
 		<ul class="space-y-4">
-			{#each repositories as { owner, repo, latestRelease, avatarUrl, stars, forks, recentCommits }}
+			{#each repositories as { owner, repo, latestRelease, avatarUrl, stars, forks }}
 				<a href="/release/{owner}/{repo}" class="block">
 					<li class="flex w-full flex-row items-center justify-between rounded-full bg-white p-4">
 						<div class="flex w-full items-center">
