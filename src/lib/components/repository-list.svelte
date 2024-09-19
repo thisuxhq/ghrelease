@@ -52,6 +52,7 @@
 							<button
 								on:click|preventDefault={() => handleRemove(owner, repo)}
 								class="mr-6 text-gray-300 hover:text-red-500"
+								data-umami-event="Remove Repository"
 							>
 								<Trash2 />
 							</button>

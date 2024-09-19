@@ -27,7 +27,7 @@
 			placeholder="Paste GitHub repository URL"
 			class="w-full flex-grow border-none bg-transparent p-2 shadow-none focus:outline-none focus-visible:ring-transparent"
 		/>
-		<Button type="submit" variant="default" class="rounded-full" disabled={!isValidGitHubUrl(url)}>
+		<Button type="submit" variant="default" class="rounded-full" disabled={!isValidGitHubUrl(url)} data-umami-event="Add GitHub Repository URL">
 			<Plus class="mr-2 h-5 w-5" />
 			Add
 		</Button>

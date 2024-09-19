@@ -53,8 +53,10 @@
 				</div>
 			</div>
 			<Dialog.Footer>
-				<Button variant="ghost" type="button" on:click={handleClose}>Cancel</Button>
-				<Button type="submit">{urlToAdd ? 'Confirm' : 'Add'}</Button>
+				<Button variant="ghost" type="button" on:click={handleClose} data-umami-event="Cancel Add Repository">Cancel</Button>
+				<Button type="submit" data-umami-event={urlToAdd ? 'Confirm Repository' : 'Add Repository'}>
+					{urlToAdd ? 'Confirm' : 'Add'}
+				</Button>
 			</Dialog.Footer>
 		</form>
 	</Dialog.Content>

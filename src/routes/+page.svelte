@@ -121,9 +121,7 @@
 				placeholder="Enter your GitHub Personal Access Token"
 				class="mr-2 w-full rounded border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
 			/>
-			<Button on:click={handleSetToken} class="w-full rounded-full" variant="default"
-				>Submit Token</Button
-			>
+			<Button on:click={handleSetToken} class="w-full rounded-full" variant="default" data-umami-event="Submit GitHub Token">Submit Token</Button>
 			<p class="mt-3 text-base text-gray-700">
 				To track public repo releases, follow these steps to get a fine-grained personal access
 				token:
